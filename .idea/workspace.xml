@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7e4ea532-8e8f-470e-bd23-3d15687c168a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Main.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Models.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/opts.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DateSet.py" beforeDir="false" afterPath="$PROJECT_DIR$/DateSet.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/data_processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/data_processing.py" afterDir="false" />
@@ -10,6 +13,13 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -26,7 +36,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager" selected="Python.DateSet">
+  <component name="RunManager" selected="Python.Main">
     <configuration name="DateSet" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="violence_detection_in_videos" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -48,6 +58,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="Main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="violence_detection_in_videos" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="data_processing" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="violence_detection_in_videos" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -61,7 +92,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/data_processing.py" />
-      <option name="PARAMETERS" value="" />
+      <option name="PARAMETERS" value="--input_dir r'D:\TAU\action_recognition\data\UCF-101' --output_dir r'D:\TAU\action_recognition\data\UCF-101-rescaled-cropped'" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -111,8 +142,16 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Python.data_processing" />
+      <item itemvalue="Python.DateSet" />
+      <item itemvalue="Python.test_i3d" />
+      <item itemvalue="Python.test_soundnet" />
+      <item itemvalue="Python.Main" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.Main" />
         <item itemvalue="Python.DateSet" />
         <item itemvalue="Python.data_processing" />
         <item itemvalue="Python.test_soundnet" />
@@ -146,10 +185,14 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2958" y="609" width="1326" height="585" key="#xdebugger.evaluate" timestamp="1580199859335">
-      <screen x="2560" y="233" width="1920" height="1030" />
+    <state x="479" y="212" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1580288003878">
+      <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="433" y="430" width="1326" height="585" key="#xdebugger.evaluate/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580195429425" />
+    <state x="479" y="212" key="#com.intellij.execution.impl.EditConfigurationsDialog/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580288003878" />
+    <state x="433" y="430" width="1326" height="585" key="#xdebugger.evaluate" timestamp="1580290714211">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="433" y="430" width="1326" height="585" key="#xdebugger.evaluate/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580290714211" />
     <state x="2958" y="609" key="#xdebugger.evaluate/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1580199859335" />
     <state width="1523" height="466" key="DebuggerActiveHint" timestamp="1580195609367">
       <screen x="0" y="0" width="2048" height="1112" />
@@ -159,60 +202,64 @@
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="805" y="312" key="FileChooserDialogImpl/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1579596127966" />
-    <state width="1012" height="347" key="GridCell.Tab.0.bottom" timestamp="1580231476835">
+    <state width="1012" height="347" key="GridCell.Tab.0.bottom" timestamp="1580292866812">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1012" height="347" key="GridCell.Tab.0.bottom/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580231476835" />
+    <state width="1012" height="347" key="GridCell.Tab.0.bottom/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580292866812" />
     <state width="949" height="347" key="GridCell.Tab.0.bottom/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1580200926847" />
-    <state width="1012" height="347" key="GridCell.Tab.0.center" timestamp="1580231476835">
+    <state width="1012" height="347" key="GridCell.Tab.0.center" timestamp="1580292866812">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1012" height="347" key="GridCell.Tab.0.center/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580231476835" />
+    <state width="1012" height="347" key="GridCell.Tab.0.center/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580292866812" />
     <state width="949" height="347" key="GridCell.Tab.0.center/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1580200926847" />
-    <state width="1012" height="347" key="GridCell.Tab.0.left" timestamp="1580231476835">
+    <state width="1012" height="347" key="GridCell.Tab.0.left" timestamp="1580292866812">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1012" height="347" key="GridCell.Tab.0.left/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580231476835" />
+    <state width="1012" height="347" key="GridCell.Tab.0.left/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580292866812" />
     <state width="949" height="347" key="GridCell.Tab.0.left/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1580200926847" />
-    <state width="1012" height="347" key="GridCell.Tab.0.right" timestamp="1580231476835">
+    <state width="1012" height="347" key="GridCell.Tab.0.right" timestamp="1580292866812">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1012" height="347" key="GridCell.Tab.0.right/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580231476835" />
+    <state width="1012" height="347" key="GridCell.Tab.0.right/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580292866812" />
     <state width="949" height="347" key="GridCell.Tab.0.right/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1580200926847" />
-    <state width="1012" height="347" key="GridCell.Tab.1.bottom" timestamp="1580231476768">
+    <state width="1012" height="347" key="GridCell.Tab.1.bottom" timestamp="1580292870776">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1012" height="347" key="GridCell.Tab.1.bottom/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580231476768" />
+    <state width="1012" height="347" key="GridCell.Tab.1.bottom/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580292870776" />
     <state width="949" height="347" key="GridCell.Tab.1.bottom/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1580201296033" />
-    <state width="1012" height="347" key="GridCell.Tab.1.center" timestamp="1580231476768">
+    <state width="1012" height="347" key="GridCell.Tab.1.center" timestamp="1580292870776">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1012" height="347" key="GridCell.Tab.1.center/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580231476768" />
+    <state width="1012" height="347" key="GridCell.Tab.1.center/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580292870776" />
     <state width="949" height="347" key="GridCell.Tab.1.center/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1580201296033" />
-    <state width="1012" height="347" key="GridCell.Tab.1.left" timestamp="1580231476768">
+    <state width="1012" height="347" key="GridCell.Tab.1.left" timestamp="1580292870776">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1012" height="347" key="GridCell.Tab.1.left/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580231476768" />
+    <state width="1012" height="347" key="GridCell.Tab.1.left/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580292870776" />
     <state width="949" height="347" key="GridCell.Tab.1.left/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1580201296033" />
-    <state width="1012" height="347" key="GridCell.Tab.1.right" timestamp="1580231476768">
+    <state width="1012" height="347" key="GridCell.Tab.1.right" timestamp="1580292870776">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1012" height="347" key="GridCell.Tab.1.right/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580231476768" />
+    <state width="1012" height="347" key="GridCell.Tab.1.right/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580292870776" />
     <state width="949" height="347" key="GridCell.Tab.1.right/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1580201296033" />
-    <state width="972" height="527" key="XDebugger.FullValuePopup" timestamp="1580199348952">
-      <screen x="2560" y="233" width="1920" height="1030" />
-    </state>
-    <state width="1036" height="568" key="XDebugger.FullValuePopup/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580150428980" />
-    <state width="972" height="527" key="XDebugger.FullValuePopup/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1580199348952" />
-    <state x="721" y="382" key="com.intellij.ide.util.TipDialog" timestamp="1580151175155">
+    <state width="1036" height="568" key="XDebugger.FullValuePopup" timestamp="1580290469733">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="721" y="382" key="com.intellij.ide.util.TipDialog/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580151175155" />
+    <state width="1036" height="568" key="XDebugger.FullValuePopup/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580290469733" />
+    <state width="972" height="527" key="XDebugger.FullValuePopup/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1580199348952" />
+    <state x="721" y="382" key="com.intellij.ide.util.TipDialog" timestamp="1580284963627">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="721" y="382" key="com.intellij.ide.util.TipDialog/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580284963627" />
     <state x="975" y="380" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1580228556596">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="975" y="380" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580228556596" />
     <state x="3474" y="585" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1580200773825" />
+    <state x="718" y="288" width="611" height="536" key="find.popup" timestamp="1580287394743">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="718" y="288" width="611" height="536" key="find.popup/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580287394743" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -226,6 +273,11 @@
           <url>file://C:/Anaconda3/envs/violence/Lib/site-packages/torchvision/datasets/video_utils.py</url>
           <line>203</line>
           <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Main.py</url>
+          <line>38</line>
+          <option name="timeStamp" value="31" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

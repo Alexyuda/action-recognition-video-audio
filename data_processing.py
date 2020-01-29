@@ -6,6 +6,7 @@ import pickle
 import math
 from tqdm import tqdm
 import numpy as np
+import argparse
 
 
 def splitall(path):
@@ -125,7 +126,7 @@ def split_videos(data_set_dir, dump_dir, seq_frame_len=64, stride_frames=32, aud
             if n_split_sections == 0:
                 continue
 
-            duration = seq_frame_len/fps
+            duration = seq_frame_len / fps
 
             for section_ind in range(n_split_sections):
                 start_frame = section_ind * stride_frames
@@ -141,8 +142,36 @@ def split_videos(data_set_dir, dump_dir, seq_frame_len=64, stride_frames=32, aud
 
 
 def rescale_crop_videos(input_dir, output_dir):
-    xxx=777
+    for root, subFolders, files in os.walk(input_dir):
+        for class_name in tqdm(subFolders):
+            output_subfolder = os.path.join(output_dir, class_name)
+            if not os.path.exists(output_subfolder):
+                os.mkdir(output_subfolder)
+            class_dir = os.path.join(root, class_name)
+            for root_class, _, vids in os.walk(class_dir):
+                for vid in vids:
+                    if '.avi' in vid:
+                        video_fn = os.path.join(class_dir, vid)
+                        output_video_fn = os.path.join(output_subfolder, vid)
+                        ffmpeg_str = f'ffmpeg -i {video_fn} -vf scale=-1:224 -filter:v "crop=224:224" {output_video_fn}'
+                        os.system(ffmpeg_str)
 
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--function','-f', choices=['rescale_crop_videos'],
+                    default='rescale_crop_videos')
+args, sub_args = parser.parse_known_args()
+
+
+if args.function == "rescale_crop_videos":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--input_dir', '-i')
+    parser.add_argument('--output_dir', '-o')
+    args = parser.parse_args(sub_args)
+    rescale_crop_videos(args.input_dir, args.output_dir)
 
 if __name__ == '__main__':
-    rescale_crop_videos(input_dir,output_dir)
+
+    input_dir = r'D:\TAU\action_recognition\data\UCF-101'
+    output_dir = r'D:\TAU\action_recognition\data\UCF-101-rescaled-cropped'
+    rescale_crop_videos(input_dir, output_dir)

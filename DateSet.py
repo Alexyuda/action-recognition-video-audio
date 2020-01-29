@@ -269,13 +269,14 @@ class MYUCF101(VisionDataset):
             video = self.transform(video)
 
         audio = audio[0] * 256
+        video = (video / 255.) * 2 - 1
         return video, audio, label
 
 
 if __name__ == '__main__':
-    root = r'D:\TAU\violence_detection_in_videos\data\UCF-101'
-    annotation_path = r'D:\TAU\violence_detection_in_videos\data\ucfTrainTestlist'
-    train = False
+    root = r'D:\TAU\action_recognition\data\UCF-101-rescaled-cropped'
+    annotation_path = r'D:\TAU\action_recognition\data\ucfTrainTestlist'
+    train = True
     fold = 1
     frames_per_clip = 64
     step_between_clips = 32
@@ -292,18 +293,4 @@ if __name__ == '__main__':
                         frames_per_clip=frames_per_clip, step_between_clips=step_between_clips,
                         fold=fold, train=train, _precomputed_metadata=meta_data, num_workers=0)
 
-
-    t = data_set.__getitem__(0)
-
-    # data_set = DatasetFolder(root=r'D:\TAU\violence_detection_in_videos\data\MyDataSet-split\train',ucf101
-    #                          loader=train_video_loader, extensions=('.mp4', '.avi'))
-
-    # failed_conter = 0
-    # for i in range(2000):
-    #     vidFn, label = data_set.__getitem__(i)
-    #     try:
-    #         audio_sample, sample_rate = librosa.load(vidFn, res_type='kaiser_fast', sr=22000)
-    #     except:
-    #         print(f"failed loading {failed_conter} / {i} files")
-    #         # os.remove(vidFn)
-    #         failed_conter += 1
+    data_set.__getitem__(0)
