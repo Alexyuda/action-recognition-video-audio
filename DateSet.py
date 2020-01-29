@@ -1,7 +1,13 @@
 from torchvision.datasets.vision import VisionDataset
+from torchvision.datasets.utils import list_dir
+from torchvision.datasets.folder import make_dataset
+from torchvision.datasets.video_utils import VideoClips
+from torchvision import transforms
 import os
 import os.path
 import sys
+import pickle
+import torch.nn.functional as F
 
 
 def has_file_allowed_extension(filename, extensions):
@@ -91,7 +97,8 @@ class DatasetFolder(VisionDataset):
         samples = make_dataset(self.root, class_to_idx, extensions, is_valid_file)
         if len(samples) == 0:
             raise (RuntimeError("Found 0 files in subfolders of: " + self.root + "\n"
-                                "Supported extensions are: " + ",".join(extensions)))
+                                                                                 "Supported extensions are: " + ",".join(
+                extensions)))
 
         self.loader = loader
         self.extensions = extensions
@@ -140,7 +147,6 @@ class DatasetFolder(VisionDataset):
 
         return sample, target
 
-
     def __len__(self):
         return len(self.samples)
 
@@ -148,12 +154,156 @@ class DatasetFolder(VisionDataset):
 def train_video_loader(path):
     return path
 
+
+def test_video_loader(path):
+    return path
+
+
 # IMG_EXTENSIONS = ('.mp4','.vid')
 VID_EXTENSIONS = ('.mp4', '.avi')
 
 
+class MYUCF101(VisionDataset):
+    """
+    `UCF101 <https://www.crcv.ucf.edu/data/UCF101.php>`_ dataset.
+
+    UCF101 is an action recognition video dataset.
+    This dataset consider every video as a collection of video clips of fixed size, specified
+    by ``frames_per_clip``, where the step in frames between each clip is given by
+    ``step_between_clips``.
+
+    To give an example, for 2 videos with 10 and 15 frames respectively, if ``frames_per_clip=5``
+    and ``step_between_clips=5``, the dataset size will be (2 + 3) = 5, where the first two
+    elements will come from video 1, and the next three elements from video 2.
+    Note that we drop clips which do not have exactly ``frames_per_clip`` elements, so not all
+    frames in a video might be present.
+
+    Internally, it uses a VideoClips object to handle clip creation.
+
+    Args:
+        root (string): Root directory of the UCF101 Dataset.
+        annotation_path (str): path to the folder containing the split files
+        frames_per_clip (int): number of frames in a clip.
+        step_between_clips (int, optional): number of frames between each clip.
+        fold (int, optional): which fold to use. Should be between 1 and 3.
+        train (bool, optional): if ``True``, creates a dataset from the train split,
+            otherwise from the ``test`` split.
+        transform (callable, optional): A function/transform that  takes in a TxHxWxC video
+            and returns a transformed version.
+
+    Returns:
+        video (Tensor[T, H, W, C]): the `T` video frames
+        audio(Tensor[K, L]): the audio frames, where `K` is the number of channels
+            and `L` is the number of points
+        label (int): class of the video clip
+    """
+
+    def __init__(self, root, annotation_path, frames_per_clip, step_between_clips=1,
+                 frame_rate=None, fold=1, train=True, transform=None,
+                 _precomputed_metadata=None, num_workers=1, _video_width=0,
+                 _video_height=0, _video_min_dimension=0, _audio_samples=0):
+        super(MYUCF101, self).__init__(root)
+        if not 1 <= fold <= 3:
+            raise ValueError("fold should be between 1 and 3, got {}".format(fold))
+
+        extensions = ('avi',)
+        self.fold = fold
+        self.train = train
+
+        classes = list(sorted(list_dir(root)))
+        class_to_idx = {classes[i]: i for i in range(len(classes))}
+        self.samples = make_dataset(self.root, class_to_idx, extensions, is_valid_file=None)
+        self.classes = classes
+        video_list = [x[0] for x in self.samples]
+        video_clips = VideoClips(
+            video_list,
+            frames_per_clip,
+            step_between_clips,
+            frame_rate,
+            _precomputed_metadata,
+            num_workers=num_workers,
+            _video_width=_video_width,
+            _video_height=_video_height,
+            _video_min_dimension=_video_min_dimension,
+            _audio_samples=_audio_samples,
+        )
+
+        meta_data_str_ = os.path.join(root,
+                                      f"meta_data_train_{train}_fold_{fold}_frames_{frames_per_clip}_skip_"
+                                      f"{step_between_clips}.pickle")
+        if not os.path.exists(meta_data_str_):
+            with open(meta_data_str_, 'wb') as ff:
+                pickle.dump(video_clips.metadata, ff)
+
+        self.video_clips_metadata = video_clips.metadata
+        self.indices = self._select_fold(video_list, annotation_path, fold, train)
+        self.video_clips = video_clips.subset(self.indices)
+        self.transform = transform
+
+    @property
+    def metadata(self):
+        return self.video_clips_metadata
+
+    def _select_fold(self, video_list, annotation_path, fold, train):
+        name = "train" if train else "test"
+        name = "{}list{:02d}.txt".format(name, fold)
+        f = os.path.join(annotation_path, name)
+        selected_files = []
+        with open(f, "r") as fid:
+            data = fid.readlines()
+            data = [x.strip().split(" ") for x in data]
+            data = [x[0] for x in data]
+            selected_files.extend(data)
+        selected_files = set(selected_files)
+        indices = [i for i in range(len(video_list)) if video_list[i][len(self.root) + 1:].replace('\\','/') in selected_files]
+        return indices
+
+    def __len__(self):
+        return self.video_clips.num_clips()
+
+    def __getitem__(self, idx):
+        video, audio, info, video_idx = self.video_clips.get_clip(idx)
+        label = self.samples[self.indices[video_idx]][1]
+
+        if self.transform is not None:
+            video = self.transform(video)
+
+        audio = audio[0] * 256
+        return video, audio, label
+
+
 if __name__ == '__main__':
-    
-    data_set = DatasetFolder(root=r'D:\TAU\violence_detection_in_videos\data\MyDataSet-split\test',
-                             loader=train_video_loader, extensions=('.mp4', '.avi'),transform=)
-    xxx=777
+    root = r'D:\TAU\violence_detection_in_videos\data\UCF-101'
+    annotation_path = r'D:\TAU\violence_detection_in_videos\data\ucfTrainTestlist'
+    train = False
+    fold = 1
+    frames_per_clip = 64
+    step_between_clips = 32
+
+    meta_data_str = os.path.join(root,
+                                 f"meta_data_train_{train}_fold_{fold}_frames_{frames_per_clip}_skip_{step_between_clips}.pickle")
+    if os.path.exists(meta_data_str):
+        with open(meta_data_str, 'rb') as f:
+            meta_data = pickle.load(f)
+    else:
+        meta_data = None
+    data_set = MYUCF101(root=root,
+                        annotation_path=annotation_path,
+                        frames_per_clip=frames_per_clip, step_between_clips=step_between_clips,
+                        fold=fold, train=train, _precomputed_metadata=meta_data, num_workers=0)
+
+
+    t = data_set.__getitem__(0)
+
+    # data_set = DatasetFolder(root=r'D:\TAU\violence_detection_in_videos\data\MyDataSet-split\train',ucf101
+    #                          loader=train_video_loader, extensions=('.mp4', '.avi'))
+
+    # failed_conter = 0
+    # for i in range(2000):
+    #     vidFn, label = data_set.__getitem__(i)
+    #     try:
+    #         audio_sample, sample_rate = librosa.load(vidFn, res_type='kaiser_fast', sr=22000)
+    #     except:
+    #         print(f"failed loading {failed_conter} / {i} files")
+    #         # os.remove(vidFn)
+    #         failed_conter += 1

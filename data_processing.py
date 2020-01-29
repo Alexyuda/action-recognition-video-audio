@@ -140,16 +140,9 @@ def split_videos(data_set_dir, dump_dir, seq_frame_len=64, stride_frames=32, aud
                 os.system(ffmpeg_cut_str)
 
 
-
+def rescale_crop_videos(input_dir, output_dir):
+    xxx=777
 
 
 if __name__ == '__main__':
-    seq_frame_len = 64
-    stride_frames = seq_frame_len / 2
-    audio_sample_rate = 22000
-
-    positive_dir = r"D:\TAU\violence_detection_in_videos\data\MyDataSet-raw\NonViolence"
-    dump_dir = r"D:\TAU\violence_detection_in_videos\data\MyDataSet\NonViolence"
-    split_videos(data_set_dir=positive_dir, dump_dir=dump_dir, seq_frame_len=seq_frame_len,
-                          stride_frames=stride_frames, audio_sample_rate=audio_sample_rate)
-
+    rescale_crop_videos(input_dir,output_dir)
