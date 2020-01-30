@@ -269,7 +269,9 @@ class MYUCF101(VisionDataset):
             video = self.transform(video)
 
         audio = audio[0] * 256
+        audio = audio.unsqueeze(0)
         video = (video / 255.) * 2 - 1
+        video = video.permute(3, 0, 1, 2).unsqueeze(0)  # (C x T x H x W)
         return video, audio, label
 
 
@@ -293,4 +295,9 @@ if __name__ == '__main__':
                         frames_per_clip=frames_per_clip, step_between_clips=step_between_clips,
                         fold=fold, train=train, _precomputed_metadata=meta_data, num_workers=0)
 
-    data_set.__getitem__(0)
+    non_valid_inds = 0
+    for i in range(41661):
+        video, audio, label = data_set.__getitem__(i)
+        if audio.shape == 0:
+            non_valid_inds += 1
+        print(f"{non_valid_inds}/{i}")

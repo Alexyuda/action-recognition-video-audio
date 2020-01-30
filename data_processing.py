@@ -141,7 +141,23 @@ def split_videos(data_set_dir, dump_dir, seq_frame_len=64, stride_frames=32, aud
                 os.system(ffmpeg_cut_str)
 
 
+def clear_folder(dir):
+    if os.path.exists(dir):
+        for the_file in os.listdir(dir):
+            file_path = os.path.join(dir, the_file)
+            try:
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
+                else:
+                    clear_folder(file_path)
+                    os.rmdir(file_path)
+            except Exception as e:
+                print(e)
+
+
 def rescale_crop_videos(input_dir, output_dir):
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
     for root, subFolders, files in os.walk(input_dir):
         for class_name in tqdm(subFolders):
             output_subfolder = os.path.join(output_dir, class_name)
@@ -152,13 +168,22 @@ def rescale_crop_videos(input_dir, output_dir):
                 for vid in vids:
                     if '.avi' in vid:
                         video_fn = os.path.join(class_dir, vid)
-                        output_video_fn = os.path.join(output_subfolder, vid)
-                        ffmpeg_str = f'ffmpeg -i {video_fn} -vf scale=-1:224 -filter:v "crop=224:224" {output_video_fn}'
-                        os.system(ffmpeg_str)
+                        try:
+                            audio_sample, sample_rate = librosa.load(video_fn, res_type='kaiser_fast', sr=22000)
+                            output_video_fn = os.path.join(output_subfolder, vid)
+                            ffmpeg_str = f'ffmpeg -i {video_fn} -vf scale=-1:224 -filter:v "crop=224:224" {output_video_fn}'
+                            os.system(ffmpeg_str)
+                        except:
+                            print(f"failed loading {video_fn} audio...removing {class_name} class from dataset")
+                            clear_folder(output_subfolder)
+                            os.rmdir(output_subfolder)
+                            break
+
+
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--function','-f', choices=['rescale_crop_videos'],
+parser.add_argument('--function', '-f', choices=['rescale_crop_videos'],
                     default='rescale_crop_videos')
 args, sub_args = parser.parse_known_args()
 
@@ -170,8 +195,5 @@ if args.function == "rescale_crop_videos":
     args = parser.parse_args(sub_args)
     rescale_crop_videos(args.input_dir, args.output_dir)
 
-if __name__ == '__main__':
 
-    input_dir = r'D:\TAU\action_recognition\data\UCF-101'
-    output_dir = r'D:\TAU\action_recognition\data\UCF-101-rescaled-cropped'
-    rescale_crop_videos(input_dir, output_dir)
+
