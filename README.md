@@ -1,21 +1,26 @@
-#action recofnition using audio and video
+### Action recognition using audio and video on ucf101
+
+## Overview
 
 This project is based on the the following repos:
 https://github.com/piergiaj/pytorch-i3d
 https://github.com/keunhong/pytorch-soundnet
 
-## project structure
 
-## installation 
+## Project structure
+
+
+## Installation 
 1. Download soundnet from https://github.com/keunhong/pytorch-soundnet and rename to soundnet.
 2. Download i3d from https://github.com/piergiaj/pytorch-i3d and rename to i3d.
 3. Download ucf101 videos and train/test splits from https://www.crcv.ucf.edu/data/UCF101.php
 5. Resize, crop and remove videos without sound:
 python data_processing.py --input_dir {ucf location dir} --output_dir {scales and crop version of ucf}
-6. Edit ops.py
+6. Edit root_dir in opts.py:
+https://github.com/Alexyuda/action_recognition/blob/fae5b5b6d826674d2d7f531a602b9c801ac63237/opts.py#L6
 
 
-## train
+## Train
 
 
 ## References
