@@ -2,12 +2,11 @@ from torchvision.datasets.vision import VisionDataset
 from torchvision.datasets.utils import list_dir
 from torchvision.datasets.folder import make_dataset
 from torchvision.datasets.video_utils import VideoClips
-from torchvision import transforms
+import torch
 import os
 import os.path
 import sys
 import pickle
-import torch.nn.functional as F
 
 
 def has_file_allowed_extension(filename, extensions):
@@ -272,6 +271,7 @@ class MYUCF101(VisionDataset):
         audio = audio.unsqueeze(0)
         video = (video / 255.) * 2 - 1
         video = video.permute(3, 0, 1, 2).unsqueeze(0)  # (C x T x H x W)
+
         return video, audio, label
 
 

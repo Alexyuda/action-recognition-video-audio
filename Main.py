@@ -5,10 +5,10 @@ import pickle
 from DateSet import MYUCF101
 from i3d.pytorch_i3d import InceptionI3d
 from soundnet.soundnet import SoundNet
-from Models import I3dRgbUcf101
-from torchsummary import summary
-from torch import nn
+from Models import *
+from torch import nn, optim
 import librosa
+from tqdm import tqdm
 
 
 def main():
@@ -32,42 +32,115 @@ def main():
     trainset = load_ucf101_data_set(args=args, train=True)
     testset = load_ucf101_data_set(args=args, train=False)
 
-    trainloader = torch.utils.data.DataLoader(trainset, batch_size=args.batch_size, shuffle=True)
-    testloader = torch.utils.data.DataLoader(testset, batch_size=args.batch_size, shuffle=True)
-
     if args.use_pre_trained_model:
         # TODO
         tmp = 777
     else:
         if args.model_type == 'i3d':
             model = I3dRgbUcf101(model_i3d)
+            load_audio = False
+        if args.model_type == 'i3d_soundnet_concat':
+            model = I3dRgbSoundConcatUcf101(model_i3d, model_soundnet)
+            load_audio = True
+        if args.model_type == 'i3d_soundnet_attention':
+            model = I3dRgbSoundAttentionUcf101(model_i3d, model_soundnet)
+            load_audio = True
 
     model.to(device)
 
     # train/test
     criterion = nn.CrossEntropyLoss()
+    optimizer = optim.Adam(model.parameters(), lr=args.lr)
+    n_train_batches = int(len(trainset) / args.batch_size)
+    n_test_batches = int(len(testset) / args.batch_size)
+
     for e in range(args.epoch):
         model.train()
         train_loss = 0
-        train_accuracy = 0
+        train_accuracy_1 = 0
+        train_accuracy_5 = 0
         test_loss = 0
-        test_accuracy = 0
-        for video, audio, labels in get_batches(dataset=trainset, batch_size=args.batch_size, frames_per_clip=args.frames_per_clip, audio_sr=args.audio_sr):
-            video, audio, labels = video.to(device), audio.to(device), labels.to(device)
-            result = model(video)
-            xxx=777
-            # loss = criterion(result, labels)
-            # train_loss += loss.item()
-            # print(f"{non_valid_inds}/{couter}")
+        test_accuracy_1 = 0
+        test_accuracy_5 = 0
+        counter = 0
+        for video, audio, labels in get_batches(dataset=trainset, batch_size=args.batch_size,
+                                                frames_per_clip=args.frames_per_clip,
+                                                audio_sr=args.audio_sr,
+                                                load_audio=load_audio):
+            counter += 1
+            video, labels = video.to(device), labels.to(device)
+            if audio is not None:
+                audio = audio.to(device)
+            result = model(video, audio)
+            loss = criterion(result, labels)
+            train_loss += loss.item()
+            prec1, prec5 = compute_accuracy(result, labels, topk=(1, 5))
+            train_accuracy_1 += prec1
+            train_accuracy_5 += prec5
+
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+            if (counter % args.print_train_stats_every_n_iters) == 0:
+                print(f"iteration: {counter}  |  train loss: {train_loss/counter}  |  "
+                      f"train accuracy top1: {train_accuracy_1/counter}  |  "
+                      f"train accuracy top5: {train_accuracy_5/counter}")
+
+        with torch.no_grad():
+            model.eval()
+            for video, audio, labels in get_batches(dataset=testset, batch_size=args.batch_size,
+                                                    frames_per_clip=args.frames_per_clip,
+                                                    audio_sr=args.audio_sr,
+                                                    load_audio=load_audio):
+                video, labels = video.to(device), labels.to(device)
+                if audio is not None:
+                    audio.to(device)
+                result = model(video)
+                loss = criterion(result, labels)
+                test_loss += loss.item()
+                prec1, prec5 = compute_accuracy(result, labels, topk=(1, 5))
+                test_accuracy_1 += prec1
+                test_accuracy_5 += prec5
+
+        train_accuracy_1 /= n_train_batches
+        train_accuracy_5 /= n_train_batches
+        train_loss /= n_train_batches
+
+        test_accuracy_1 /= n_test_batches
+        test_accuracy_5 /= n_test_batches
+        test_loss /= n_test_batches
+
+        print(f"epoch: {e}  |  train loss: {train_loss}  |  "
+              f"train accuracy top1: {train_accuracy_1}  |  "
+              f"train accuracy top5: {train_accuracy_5}   |  "
+              f"test loss: {test_loss}  |  "
+              f"test accuracy top1: {test_accuracy_1}  |  "
+              f"test accuracy top5: {test_accuracy_5}")
+
+
+def compute_accuracy(output, target, topk=(1,)):
+    maxk = max(topk)
+    batch_size = target.size(0)
+
+    _, pred = output.topk(maxk, 1)
+    corrrect = pred.eq(target.view(-1, 1).expand_as(pred))
+
+    store = []
+    for k in topk:
+        corrrect_k = corrrect[:, :k].float().sum()
+        store.append(corrrect_k / batch_size)
+    return store
 
 
 def get_batches(dataset, batch_size=1, audio_sr=22000, vid_fps=25, frames_per_clip=64, load_audio=True):
     n_samples = dataset.__len__()
-    n_val_samples = batch_size*int(n_samples/batch_size)
+    n_val_samples = batch_size * int(n_samples / batch_size)
     samples_inds = torch.randperm(n_val_samples).reshape((-1, batch_size))
+    # samples_inds = torch.tensor([x for x in range(1000)], dtype=torch.long).reshape((-1, batch_size))
     n_batches = samples_inds.shape[0]
 
-    for n in range(n_batches):
+    for n in tqdm(range(n_batches)):
         vids, audios, labels = [], [], []
         for s in range(batch_size):
             idx = samples_inds[n, s]
@@ -80,7 +153,7 @@ def get_batches(dataset, batch_size=1, audio_sr=22000, vid_fps=25, frames_per_cl
             if load_audio:
                 audio_sample, _ = librosa.load(video_path, res_type='kaiser_fast', sr=audio_sr)
                 audio_start = int(audio_sr * (start_pts / vid_fps))
-                audio_end = int(audio_start + audio_sr * (frames_per_clip/vid_fps))
+                audio_end = int(audio_start + audio_sr * (frames_per_clip / vid_fps))
 
                 audio_sample = audio_sample[audio_start:audio_end]
                 audio_sample *= 256
@@ -88,7 +161,7 @@ def get_batches(dataset, batch_size=1, audio_sr=22000, vid_fps=25, frames_per_cl
                 audios.append(audio_sample_tensor)
 
             vids.append(vid)
-            labels.append(label)
+            labels.append(float(label))
 
         if load_audio:
             audios_min_size = min([x.shape[2] for x in audios])
@@ -98,7 +171,7 @@ def get_batches(dataset, batch_size=1, audio_sr=22000, vid_fps=25, frames_per_cl
             audios = None
 
         vids = torch.cat(vids, dim=0)
-        labels = torch.Tensor(labels)
+        labels = torch.tensor(labels, dtype=torch.long)
         yield vids, audios, labels
 
 
@@ -121,4 +194,3 @@ def load_ucf101_data_set(args, train):
 
 
 main()
-

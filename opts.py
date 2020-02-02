@@ -15,15 +15,17 @@ parser.add_argument('--fold', default=1, type=int, choices=[1, 2, 3], help='Ther
                                                                            'Train/Test Splits')
 parser.add_argument('--frames_per_clip', default=64, type=int, help='Each video is splitted '
                                                                     'into #frames_per_clip length clips')
-parser.add_argument('--step_between_clips', default=32, type=int, help='Stride between clips')
+parser.add_argument('--step_between_clips', default=64, type=int, help='Stride between clips')
 parser.add_argument('--audio_sr', default=22000, type=int, help='Stride between clips')
+parser.add_argument('--print_train_stats_every_n_iters', default=200, type=int, help='Print training status every n iterations')
+
 
 # ============================ Learning Configs ============================
 parser.add_argument('--batch_size', default=4, type=int)
-parser.add_argument('--learning_rate', default=0.001, type=float)
+parser.add_argument('--lr', default=0.0003, type=float)
 parser.add_argument('--epoch', default=50, type=int)
 
 # ============================ Model Configs ============================
 parser.add_argument('--train_or_test_mode', default='train', type=str, choices=['test', 'train'])
 parser.add_argument('--use_pre_trained_model', default=False, type=bool)
-parser.add_argument('--model_type', default='i3d', choices=['i3d', 'i3d_soundnet_concat', 'i3d_soundnet_attention'], type=str)
+parser.add_argument('--model_type', default='i3d_soundnet_attention', choices=['i3d', 'i3d_soundnet_concat', 'i3d_soundnet_attention'], type=str)
