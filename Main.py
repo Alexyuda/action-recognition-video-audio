@@ -95,8 +95,8 @@ def main():
                                                     load_audio=load_audio):
                 video, labels = video.to(device), labels.to(device)
                 if audio is not None:
-                    audio.to(device)
-                result = model(video)
+                    audio = audio.to(device)
+                result = model(video, audio)
                 loss = criterion(result, labels)
                 test_loss += loss.item()
                 prec1, prec5 = compute_accuracy(result, labels, topk=(1, 5))
@@ -192,5 +192,5 @@ def load_ucf101_data_set(args, train):
                        fold=args.fold, train=train, _precomputed_metadata=meta_data, num_workers=0)
     return dataset
 
-
-main()
+if __name__ == "__main__":
+    main()
