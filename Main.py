@@ -9,10 +9,14 @@ from Models import *
 from torch import nn, optim
 import librosa
 from tqdm import tqdm
+from datetime import datetime
+from torch.utils.tensorboard import SummaryWriter
 
 
 def main():
     args = parser.parse_args()
+
+    cur_time = datetime.today().strftime('%Y-%m-%d-%H_%M_%S')
 
     # Constant seed
     torch.manual_seed(0)
@@ -32,21 +36,20 @@ def main():
     trainset = load_ucf101_data_set(args=args, train=True)
     testset = load_ucf101_data_set(args=args, train=False)
 
-    if args.use_pre_trained_model:
-        # TODO
-        tmp = 777
-    else:
-        if args.model_type == 'i3d':
-            model = I3dRgbUcf101(model_i3d)
-            load_audio = False
-        if args.model_type == 'i3d_soundnet_concat':
-            model = I3dRgbSoundConcatUcf101(model_i3d, model_soundnet)
-            load_audio = True
-        if args.model_type == 'i3d_soundnet_attention':
-            model = I3dRgbSoundAttentionUcf101(model_i3d, model_soundnet)
-            load_audio = True
+    if args.model_type == 'i3d':
+        model = I3dRgbUcf101(model_i3d, drop_out=args.drop_out)
+        load_audio = False
+    if args.model_type == 'i3d_soundnet_concat':
+        model = I3dRgbSoundConcatUcf101(model_i3d, model_soundnet, drop_out=args.drop_out)
+        load_audio = True
+    if args.model_type == 'i3d_soundnet_attention':
+        model = I3dRgbSoundAttentionUcf101(model_i3d, model_soundnet, drop_out=args.drop_out)
+        load_audio = True
 
     model.to(device)
+
+    if args.use_pre_trained_model:
+        model.load_state_dict(torch.load(os.path.join(args.root_dir, args.checkpnts_dir, args.pre_trained_model_fn)))
 
     # train/test
     criterion = nn.CrossEntropyLoss()
@@ -54,39 +57,90 @@ def main():
     n_train_batches = int(len(trainset) / args.batch_size)
     n_test_batches = int(len(testset) / args.batch_size)
 
-    for e in range(args.epoch):
-        model.train()
-        train_loss = 0
-        train_accuracy_1 = 0
-        train_accuracy_5 = 0
+    if args.train_or_test_mode == 'train':
+        log_dir = os.path.join(args.root_dir, args.logs_dir)
+        writer = SummaryWriter(os.path.join(log_dir, f"{cur_time}_{args.model_type}"))
+        print(f"run: tensorboard --logdir={log_dir}  --host=127.0.0.1")
+        for e in range(args.epoch):
+            model.train()
+            train_loss = 0
+            train_accuracy_1 = 0
+            train_accuracy_5 = 0
+            test_loss = 0
+            test_accuracy_1 = 0
+            test_accuracy_5 = 0
+            counter = 0
+            for video, audio, labels in get_batches(dataset=trainset, batch_size=args.batch_size,
+                                                    frames_per_clip=args.frames_per_clip,
+                                                    audio_sr=args.audio_sr,
+                                                    load_audio=load_audio):
+                counter += 1
+                video, labels = video.to(device), labels.to(device)
+                if audio is not None:
+                    audio = audio.to(device)
+                result = model(video, audio)
+                loss = criterion(result, labels)
+                train_loss += loss.item()
+                prec1, prec5 = compute_accuracy(result, labels, topk=(1, 5))
+                train_accuracy_1 += prec1
+                train_accuracy_5 += prec5
+
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+
+                if (counter % args.print_train_stats_every_n_iters) == 0:
+                    print(f"iteration: {counter}  |  train loss: {train_loss/counter}  |  "
+                          f"train accuracy top1: {train_accuracy_1/counter}  |  "
+                          f"train accuracy top5: {train_accuracy_5/counter}")
+
+            with torch.no_grad():
+                model.eval()
+                for video, audio, labels in get_batches(dataset=testset, batch_size=args.batch_size,
+                                                        frames_per_clip=args.frames_per_clip,
+                                                        audio_sr=args.audio_sr,
+                                                        load_audio=load_audio):
+                    video, labels = video.to(device), labels.to(device)
+                    if audio is not None:
+                        audio = audio.to(device)
+                    result = model(video, audio)
+                    loss = criterion(result, labels)
+                    test_loss += loss.item()
+                    prec1, prec5 = compute_accuracy(result, labels, topk=(1, 5))
+                    test_accuracy_1 += prec1
+                    test_accuracy_5 += prec5
+
+            train_accuracy_1 /= n_train_batches
+            train_accuracy_5 /= n_train_batches
+            train_loss /= n_train_batches
+
+            test_accuracy_1 /= n_test_batches
+            test_accuracy_5 /= n_test_batches
+            test_loss /= n_test_batches
+
+            print(f"epoch: {e}  |  train loss: {train_loss}  |  "
+                  f"train accuracy top1: {train_accuracy_1}  |  "
+                  f"train accuracy top5: {train_accuracy_5}   |  "
+                  f"test loss: {test_loss}  |  "
+                  f"test accuracy top1: {test_accuracy_1}  |  "
+                  f"test accuracy top5: {test_accuracy_5}")
+
+            writer.add_scalar('Loss/train', train_loss, e)
+            writer.add_scalar('Top1_acc/train', train_accuracy_1, e)
+            writer.add_scalar('Top1_acc/train', train_accuracy_5, e)
+            writer.add_scalar('Loss/test', test_loss, e)
+            writer.add_scalar('Top1_acc/test', test_accuracy_1, e)
+            writer.add_scalar('Top1_acc/test', test_accuracy_5, e)
+
+            model_name = f"{cur_time}_{args.model_type}_epoch{e}_top1_{test_accuracy_1:.2f}_top5_{test_accuracy_5:.2f}.pth"
+            model_fn = os.path.join(args.root_dir, args.checkpnts_dir, model_name)
+            torch.save(model.state_dict(), model_fn)
+        writer.close()
+
+    if args.train_or_test_mode == 'test':
         test_loss = 0
         test_accuracy_1 = 0
         test_accuracy_5 = 0
-        counter = 0
-        for video, audio, labels in get_batches(dataset=trainset, batch_size=args.batch_size,
-                                                frames_per_clip=args.frames_per_clip,
-                                                audio_sr=args.audio_sr,
-                                                load_audio=load_audio):
-            counter += 1
-            video, labels = video.to(device), labels.to(device)
-            if audio is not None:
-                audio = audio.to(device)
-            result = model(video, audio)
-            loss = criterion(result, labels)
-            train_loss += loss.item()
-            prec1, prec5 = compute_accuracy(result, labels, topk=(1, 5))
-            train_accuracy_1 += prec1
-            train_accuracy_5 += prec5
-
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
-
-            if (counter % args.print_train_stats_every_n_iters) == 0:
-                print(f"iteration: {counter}  |  train loss: {train_loss/counter}  |  "
-                      f"train accuracy top1: {train_accuracy_1/counter}  |  "
-                      f"train accuracy top5: {train_accuracy_5/counter}")
-
         with torch.no_grad():
             model.eval()
             for video, audio, labels in get_batches(dataset=testset, batch_size=args.batch_size,
@@ -103,18 +157,11 @@ def main():
                 test_accuracy_1 += prec1
                 test_accuracy_5 += prec5
 
-        train_accuracy_1 /= n_train_batches
-        train_accuracy_5 /= n_train_batches
-        train_loss /= n_train_batches
-
         test_accuracy_1 /= n_test_batches
         test_accuracy_5 /= n_test_batches
         test_loss /= n_test_batches
 
-        print(f"epoch: {e}  |  train loss: {train_loss}  |  "
-              f"train accuracy top1: {train_accuracy_1}  |  "
-              f"train accuracy top5: {train_accuracy_5}   |  "
-              f"test loss: {test_loss}  |  "
+        print(f"test loss: {test_loss}  |  "
               f"test accuracy top1: {test_accuracy_1}  |  "
               f"test accuracy top5: {test_accuracy_5}")
 

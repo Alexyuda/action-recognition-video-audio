@@ -3,7 +3,10 @@ import argparse
 parser = argparse.ArgumentParser()
 
 # ================================ Dirs ================================
+#!!!all dirs are relative to root_dir!!!
 parser.add_argument('--root_dir', default=r'D:\TAU\action_recognition', type=str)
+parser.add_argument('--checkpnts_dir', default=r'checkpnts', type=str)
+parser.add_argument('--logs_dir', default=r'logs', type=str)
 parser.add_argument('--dataset_dir', default=r'data\UCF-101-rescaled-cropped', type=str)
 parser.add_argument('--train_test_split_dir', default=r'data\ucfTrainTestlist', type=str)
 parser.add_argument('--I3d_pretrained_fn', default=r'i3d\models\rgb_imagenet.pt', type=str)
@@ -22,10 +25,12 @@ parser.add_argument('--print_train_stats_every_n_iters', default=200, type=int, 
 
 # ============================ Learning Configs ============================
 parser.add_argument('--batch_size', default=4, type=int)
-parser.add_argument('--lr', default=0.0003, type=float)
-parser.add_argument('--epoch', default=50, type=int)
+parser.add_argument('--lr', default=0.0001, type=float)
+parser.add_argument('--epoch', default=5, type=int)
+parser.add_argument('--drop_out', default=0.5, type=float)
 
 # ============================ Model Configs ============================
 parser.add_argument('--train_or_test_mode', default='train', type=str, choices=['test', 'train'])
 parser.add_argument('--use_pre_trained_model', default=False, type=bool)
+parser.add_argument('--pre_trained_fn', default=None, type=str)
 parser.add_argument('--model_type', default='i3d_soundnet_attention', choices=['i3d', 'i3d_soundnet_concat', 'i3d_soundnet_attention'], type=str)
