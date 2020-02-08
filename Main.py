@@ -24,7 +24,7 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # load pretrained models
-    model_i3d = InceptionI3d(400, in_channels=3)  # Using RGB, to use flow use in_channels=2
+    model_i3d = InceptionI3d(400, in_channels=3, dropout_keep_prob=args.drop_out)  # Using RGB, to use flow use in_channels=2
     model_i3d.load_state_dict(torch.load(os.path.join(args.root_dir, args.I3d_pretrained_fn)))
     model_i3d.to(device)
 
@@ -127,12 +127,12 @@ def main():
 
             writer.add_scalar('Loss/train', train_loss, e)
             writer.add_scalar('Top1_acc/train', train_accuracy_1, e)
-            writer.add_scalar('Top1_acc/train', train_accuracy_5, e)
+            writer.add_scalar('Top5_acc/train', train_accuracy_5, e)
             writer.add_scalar('Loss/test', test_loss, e)
             writer.add_scalar('Top1_acc/test', test_accuracy_1, e)
-            writer.add_scalar('Top1_acc/test', test_accuracy_5, e)
+            writer.add_scalar('Top5_acc/test', test_accuracy_5, e)
 
-            model_name = f"{cur_time}_{args.model_type}_epoch{e}_top1_{test_accuracy_1:.2f}_top5_{test_accuracy_5:.2f}.pth"
+            model_name = f"{cur_time}_{args.model_type}_epoch{e}_top1_{test_accuracy_1:.3f}_top5_{test_accuracy_5:.3f}.pth"
             model_fn = os.path.join(args.root_dir, args.checkpnts_dir, model_name)
             torch.save(model.state_dict(), model_fn)
         writer.close()
