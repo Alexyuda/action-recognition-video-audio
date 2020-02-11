@@ -65,11 +65,13 @@ class I3dRgbSoundAttentionUcf101(nn.Module):
         x_vid = self.i3d(x_vid)
         avg_pool_vid = nn.AvgPool1d(kernel_size=x_vid.shape[2])
         x_vid = avg_pool_vid(x_vid).squeeze()
+        x_vid = self.relu(x_vid)
         x_vid = self.fc_model_video(x_vid)
 
         x_audio = self.soundnet(x_audio).squeeze()
         avg_pool_audio = nn.AvgPool1d(kernel_size=x_audio.shape[2])
         x_audio = avg_pool_audio(x_audio).squeeze()
+        x_audio = self.relu(x_audio)
         x_audio = self.fc_model_audio(x_audio)
 
         x_attention = torch.cat((x_vid, x_audio), dim=1)
@@ -79,8 +81,10 @@ class I3dRgbSoundAttentionUcf101(nn.Module):
         audio_attention = x_attention[:, 1].unsqueeze(1).expand(-1, 256)
 
         x = x_vid * vid_attention + x_audio * audio_attention
+        # x = x_vid * 0 + x_audio * 1
         x = self.relu(x)
         x = self.drop_out(x)
         x = self.fc_model(x)
-        return x
+
+        return x, x_attention[:, 1], x_vid, x_audio
 

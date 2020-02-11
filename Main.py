@@ -11,6 +11,8 @@ import librosa
 from tqdm import tqdm
 from datetime import datetime
 from torch.utils.tensorboard import SummaryWriter
+import pandas as pd
+import itertools
 
 
 def main():
@@ -49,7 +51,7 @@ def main():
     model.to(device)
 
     if args.use_pre_trained_model:
-        model.load_state_dict(torch.load(os.path.join(args.root_dir, args.checkpnts_dir, args.pre_trained_model_fn)))
+        model.load_state_dict(torch.load(os.path.join(args.root_dir, args.checkpnts_dir, args.pre_trained_model_name)))
 
     # train/test
     criterion = nn.CrossEntropyLoss()
@@ -70,7 +72,7 @@ def main():
             test_accuracy_1 = 0
             test_accuracy_5 = 0
             counter = 0
-            for video, audio, labels in get_batches(dataset=trainset, batch_size=args.batch_size,
+            for video, audio, labels, class_names in get_batches(dataset=trainset, batch_size=args.batch_size,
                                                     frames_per_clip=args.frames_per_clip,
                                                     audio_sr=args.audio_sr,
                                                     load_audio=load_audio):
@@ -78,8 +80,17 @@ def main():
                 video, labels = video.to(device), labels.to(device)
                 if audio is not None:
                     audio = audio.to(device)
-                result = model(video, audio)
-                loss = criterion(result, labels)
+
+                if args.model_type == 'i3d_soundnet_attention':
+                    result, _, vid_emb, audio_emb = model(video, audio)
+                    kl_dist = nn.functional.kl_div(nn.functional.log_softmax(vid_emb, dim=1),
+                                                   nn.functional.softmax(audio_emb, dim=1), reduction='batchmean')
+                    loss = criterion(result, labels)
+                    loss += kl_dist
+                else:
+                    result = model(video, audio)
+                    loss = criterion(result, labels)
+
                 train_loss += loss.item()
                 prec1, prec5 = compute_accuracy(result, labels, topk=(1, 5))
                 train_accuracy_1 += prec1
@@ -96,14 +107,19 @@ def main():
 
             with torch.no_grad():
                 model.eval()
-                for video, audio, labels in get_batches(dataset=testset, batch_size=args.batch_size,
+                for video, audio, labels, class_names in get_batches(dataset=testset, batch_size=args.batch_size,
                                                         frames_per_clip=args.frames_per_clip,
                                                         audio_sr=args.audio_sr,
                                                         load_audio=load_audio):
                     video, labels = video.to(device), labels.to(device)
                     if audio is not None:
                         audio = audio.to(device)
-                    result = model(video, audio)
+
+                    if args.model_type == 'i3d_soundnet_attention':
+                        result, _, _, _ = model(video, audio)
+                    else:
+                        result = model(video, audio)
+
                     loss = criterion(result, labels)
                     test_loss += loss.item()
                     prec1, prec5 = compute_accuracy(result, labels, topk=(1, 5))
@@ -138,28 +154,45 @@ def main():
         writer.close()
 
     if args.train_or_test_mode == 'test':
+        class_names_list = []
+        audio_attenation_list = []
         test_loss = 0
         test_accuracy_1 = 0
         test_accuracy_5 = 0
         with torch.no_grad():
             model.eval()
-            for video, audio, labels in get_batches(dataset=testset, batch_size=args.batch_size,
+            for video, audio, labels, class_names in get_batches(dataset=testset, batch_size=args.batch_size,
                                                     frames_per_clip=args.frames_per_clip,
                                                     audio_sr=args.audio_sr,
                                                     load_audio=load_audio):
                 video, labels = video.to(device), labels.to(device)
                 if audio is not None:
                     audio = audio.to(device)
-                result = model(video, audio)
+                if args.model_type == 'i3d_soundnet_attention':
+                    result, audio_attention, _, _ = model(video, audio)
+                    audio_attention *= 100  # [%]
+                else:
+                    result = model(video, audio)
                 loss = criterion(result, labels)
                 test_loss += loss.item()
                 prec1, prec5 = compute_accuracy(result, labels, topk=(1, 5))
                 test_accuracy_1 += prec1
                 test_accuracy_5 += prec5
+                class_names_list.append(class_names)
+                audio_attenation_list.append(audio_attention.tolist())
 
         test_accuracy_1 /= n_test_batches
         test_accuracy_5 /= n_test_batches
         test_loss /= n_test_batches
+
+        if args.model_type == 'i3d_soundnet_attention':
+            print('Per Class Attention for audio [%]:')
+            df = pd.DataFrame(list(zip(list(itertools.chain(*class_names_list)),
+                                       list(itertools.chain(*audio_attenation_list)))),
+                              columns=['class', 'val'])
+            df = df.groupby('class').mean().reset_index()
+            df.sort_values(by=['val'], inplace=True, ascending=False)
+            print(df)
 
         print(f"test loss: {test_loss}  |  "
               f"test accuracy top1: {test_accuracy_1}  |  "
@@ -188,13 +221,14 @@ def get_batches(dataset, batch_size=1, audio_sr=22000, vid_fps=25, frames_per_cl
     n_batches = samples_inds.shape[0]
 
     for n in tqdm(range(n_batches)):
-        vids, audios, labels = [], [], []
+        vids, audios, labels, class_names = [], [], [], []
         for s in range(batch_size):
             idx = samples_inds[n, s]
             vid, _, label = dataset.__getitem__(idx)
 
             video_idx, clip_idx = dataset.video_clips.get_clip_location(idx)
             video_path = dataset.video_clips.video_paths[video_idx]
+            class_name = os.path.split(os.path.split(video_path)[0])[1]
             clip_pts = dataset.video_clips.clips[video_idx][clip_idx]
             start_pts = clip_pts[0].item()
             if load_audio:
@@ -209,6 +243,7 @@ def get_batches(dataset, batch_size=1, audio_sr=22000, vid_fps=25, frames_per_cl
 
             vids.append(vid)
             labels.append(float(label))
+            class_names.append(class_name)
 
         if load_audio:
             audios_min_size = min([x.shape[2] for x in audios])
@@ -219,7 +254,7 @@ def get_batches(dataset, batch_size=1, audio_sr=22000, vid_fps=25, frames_per_cl
 
         vids = torch.cat(vids, dim=0)
         labels = torch.tensor(labels, dtype=torch.long)
-        yield vids, audios, labels
+        yield vids, audios, labels, class_names
 
 
 def load_ucf101_data_set(args, train):
@@ -238,6 +273,7 @@ def load_ucf101_data_set(args, train):
                        frames_per_clip=args.frames_per_clip, step_between_clips=args.step_between_clips,
                        fold=args.fold, train=train, _precomputed_metadata=meta_data, num_workers=0)
     return dataset
+
 
 if __name__ == "__main__":
     main()

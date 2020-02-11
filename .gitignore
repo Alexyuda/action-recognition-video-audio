@@ -7,3 +7,5 @@ soundnet/
 cmd_run.cmd
 checkpnts/
 logs/
+checkpnts_/
+logs_/
