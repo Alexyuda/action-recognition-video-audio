@@ -2,17 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7e4ea532-8e8f-470e-bd23-3d15687c168a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/cmd_test.cmd" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cmd_train.cmd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd_test.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/cmd_test.cmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd_train.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/cmd_train.cmd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/opts.py" beforeDir="false" afterPath="$PROJECT_DIR$/opts.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="action_recognition" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -33,10 +36,10 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="D:/track160_home/whistle" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
-  <component name="RunManager" selected="Python.Main">
+  <component name="RunManager" selected="Python.Main test">
     <configuration name="DateSet" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="violence_detection_in_videos" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -58,7 +61,28 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Main" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="Main test" type="PythonConfigurationType" factoryName="Python">
+      <module name="violence_detection_in_videos" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Main.py" />
+      <option name="PARAMETERS" value="--train_or_test_mode test --use_pre_trained_model True --pre_trained_model_name 2020-02-18-16_46_48_i3d_soundnet_attention_epoch1_top1_0.145_top5_0.380.pth" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Main train from 0" type="PythonConfigurationType" factoryName="Python">
       <module name="violence_detection_in_videos" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -72,6 +96,27 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Main.py" />
       <option name="PARAMETERS" value="--train_or_test_mode train --model_type i3d_soundnet_attention" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Main- continue training" type="PythonConfigurationType" factoryName="Python">
+      <module name="violence_detection_in_videos" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Anaconda3\envs\violence\python.exe" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Main.py" />
+      <option name="PARAMETERS" value="--train_or_test_mode train --use_pre_trained_model True --pre_trained_model_name 2020-02-14-18_40_06_i3d_soundnet_attention_epoch2_top1_0.794_top5_0.967.pth" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -143,18 +188,19 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Python.Main- continue training" />
+      <item itemvalue="Python.Main train from 0" />
+      <item itemvalue="Python.Main test" />
       <item itemvalue="Python.DateSet" />
-      <item itemvalue="Python.Main" />
       <item itemvalue="Python.data_processing" />
       <item itemvalue="Python.test_i3d" />
       <item itemvalue="Python.test_soundnet (1)" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.Main" />
+        <item itemvalue="Python.test_soundnet (1)" />
         <item itemvalue="Python.test_i3d" />
         <item itemvalue="Python.data_processing" />
-        <item itemvalue="Python.test_soundnet (1)" />
         <item itemvalue="Python.DateSet" />
       </list>
     </recent_temporary>
@@ -193,10 +239,22 @@
     </ignored-roots>
   </component>
   <component name="WindowStateProjectService">
-    <state x="3009" y="429" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1581347440605">
-      <screen x="2560" y="233" width="1920" height="1030" />
+    <state x="752" y="244" key="#Main" timestamp="1581585984126">
+      <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="479" y="212" key="#com.intellij.execution.impl.EditConfigurationsDialog/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1581321066067" />
+    <state x="752" y="184" key="#Main-_continue_training" timestamp="1582131158493">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="752" y="184" key="#Main-_continue_training/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1582131158493" />
+    <state x="752" y="244" key="#Main/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1581585984126" />
+    <state x="752" y="184" key="#Models" timestamp="1581856112893">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="752" y="184" key="#Models/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1581856112893" />
+    <state x="479" y="212" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1582131500835">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="479" y="212" key="#com.intellij.execution.impl.EditConfigurationsDialog/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1582131500835" />
     <state x="3009" y="429" key="#com.intellij.execution.impl.EditConfigurationsDialog/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1581347440605" />
     <state x="805" y="262" key="#com.intellij.ide.macro.MacrosDialog" timestamp="1581276663030">
       <screen x="0" y="0" width="2048" height="1112" />
@@ -206,60 +264,65 @@
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="752" y="184" key="#data_processing/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580384041669" />
-    <state x="2958" y="609" width="1326" height="585" key="#xdebugger.evaluate" timestamp="1581352597115">
+    <state x="2958" y="609" width="1326" height="585" key="#xdebugger.evaluate" timestamp="1581491899492">
       <screen x="2560" y="233" width="1920" height="1030" />
     </state>
     <state x="456" y="508" width="1326" height="585" key="#xdebugger.evaluate/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1581277137122" />
-    <state x="2958" y="609" key="#xdebugger.evaluate/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1581352597115" />
+    <state x="2958" y="609" key="#xdebugger.evaluate/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1581491899492" />
     <state width="1428" height="432" key="DebuggerActiveHint" timestamp="1581353135279">
       <screen x="2560" y="233" width="1920" height="1030" />
     </state>
     <state width="1523" height="466" key="DebuggerActiveHint/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580392834904" />
     <state width="1428" height="432" key="DebuggerActiveHint/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1581353135279" />
-    <state x="805" y="312" key="FileChooserDialogImpl" timestamp="1580981099014">
-      <screen x="0" y="0" width="2048" height="1112" />
+    <state x="3315" y="522" key="FileChooserDialogImpl" timestamp="1581409923614">
+      <screen x="2560" y="233" width="1920" height="1030" />
     </state>
     <state x="805" y="312" key="FileChooserDialogImpl/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580981099014" />
-    <state width="1899" height="421" key="GridCell.Tab.0.bottom" timestamp="1581354065078">
-      <screen x="2560" y="233" width="1920" height="1030" />
+    <state x="3315" y="522" key="FileChooserDialogImpl/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1581409923614" />
+    <state width="2027" height="411" key="GridCell.Tab.0.bottom" timestamp="1582131502296">
+      <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2027" height="421" key="GridCell.Tab.0.bottom/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1581321907572" />
-    <state width="1899" height="421" key="GridCell.Tab.0.bottom/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1581354065078" />
-    <state width="1899" height="421" key="GridCell.Tab.0.center" timestamp="1581354065077">
-      <screen x="2560" y="233" width="1920" height="1030" />
+    <state width="2027" height="411" key="GridCell.Tab.0.bottom/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1582131502296" />
+    <state width="1899" height="266" key="GridCell.Tab.0.bottom/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1581524647351" />
+    <state width="2027" height="411" key="GridCell.Tab.0.center" timestamp="1582131502296">
+      <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2027" height="421" key="GridCell.Tab.0.center/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1581321907572" />
-    <state width="1899" height="421" key="GridCell.Tab.0.center/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1581354065077" />
-    <state width="1899" height="421" key="GridCell.Tab.0.left" timestamp="1581354065077">
-      <screen x="2560" y="233" width="1920" height="1030" />
+    <state width="2027" height="411" key="GridCell.Tab.0.center/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1582131502296" />
+    <state width="1899" height="266" key="GridCell.Tab.0.center/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1581524647351" />
+    <state width="2027" height="411" key="GridCell.Tab.0.left" timestamp="1582131502296">
+      <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2027" height="421" key="GridCell.Tab.0.left/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1581321907572" />
-    <state width="1899" height="421" key="GridCell.Tab.0.left/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1581354065077" />
-    <state width="1899" height="421" key="GridCell.Tab.0.right" timestamp="1581354065078">
-      <screen x="2560" y="233" width="1920" height="1030" />
+    <state width="2027" height="411" key="GridCell.Tab.0.left/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1582131502296" />
+    <state width="1899" height="266" key="GridCell.Tab.0.left/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1581524647351" />
+    <state width="2027" height="411" key="GridCell.Tab.0.right" timestamp="1582131502296">
+      <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2027" height="421" key="GridCell.Tab.0.right/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1581321907572" />
-    <state width="1899" height="421" key="GridCell.Tab.0.right/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1581354065078" />
-    <state width="1899" height="421" key="GridCell.Tab.1.bottom" timestamp="1581354047718">
-      <screen x="2560" y="233" width="1920" height="1030" />
+    <state width="2027" height="411" key="GridCell.Tab.0.right/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1582131502296" />
+    <state width="1899" height="266" key="GridCell.Tab.0.right/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1581524647351" />
+    <state width="2027" height="411" key="GridCell.Tab.1.bottom" timestamp="1582131513221">
+      <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2027" height="421" key="GridCell.Tab.1.bottom/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1581321907508" />
-    <state width="1899" height="421" key="GridCell.Tab.1.bottom/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1581354047718" />
-    <state width="1899" height="421" key="GridCell.Tab.1.center" timestamp="1581354047718">
-      <screen x="2560" y="233" width="1920" height="1030" />
+    <state width="2027" height="411" key="GridCell.Tab.1.bottom/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1582131513221" />
+    <state width="1899" height="266" key="GridCell.Tab.1.bottom/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1581524408431" />
+    <state width="2027" height="411" key="GridCell.Tab.1.center" timestamp="1582131513221">
+      <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2027" height="421" key="GridCell.Tab.1.center/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1581321907507" />
-    <state width="1899" height="421" key="GridCell.Tab.1.center/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1581354047718" />
-    <state width="1899" height="421" key="GridCell.Tab.1.left" timestamp="1581354047718">
-      <screen x="2560" y="233" width="1920" height="1030" />
+    <state width="2027" height="411" key="GridCell.Tab.1.center/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1582131513221" />
+    <state width="1899" height="266" key="GridCell.Tab.1.center/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1581524408431" />
+    <state width="2027" height="411" key="GridCell.Tab.1.left" timestamp="1582131513221">
+      <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2027" height="421" key="GridCell.Tab.1.left/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1581321907507" />
-    <state width="1899" height="421" key="GridCell.Tab.1.left/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1581354047718" />
-    <state width="1899" height="421" key="GridCell.Tab.1.right" timestamp="1581354047718">
-      <screen x="2560" y="233" width="1920" height="1030" />
+    <state width="2027" height="411" key="GridCell.Tab.1.left/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1582131513221" />
+    <state width="1899" height="266" key="GridCell.Tab.1.left/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1581524408431" />
+    <state width="2027" height="411" key="GridCell.Tab.1.right" timestamp="1582131513221">
+      <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="2027" height="421" key="GridCell.Tab.1.right/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1581321907508" />
-    <state width="1899" height="421" key="GridCell.Tab.1.right/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1581354047718" />
+    <state width="2027" height="411" key="GridCell.Tab.1.right/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1582131513221" />
+    <state width="1899" height="266" key="GridCell.Tab.1.right/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1581524408431" />
+    <state x="875" y="279" key="RollbackChangesDialog" timestamp="1581836782173">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="875" y="279" key="RollbackChangesDialog/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1581836782173" />
     <state x="533" y="200" key="SettingsEditor" timestamp="1580628556730">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
@@ -275,11 +338,11 @@
     </state>
     <state x="721" y="382" key="com.intellij.ide.util.TipDialog/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580978510837" />
     <state x="3236" y="587" key="com.intellij.ide.util.TipDialog/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1581347393353" />
-    <state x="975" y="380" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1580228556596">
-      <screen x="0" y="0" width="2048" height="1112" />
+    <state x="2853" y="583" width="858" height="535" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1581408098850">
+      <screen x="2560" y="233" width="1920" height="1030" />
     </state>
     <state x="975" y="380" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/2560.233.1920.1030/0.0.2048.1112@0.0.2048.1112" timestamp="1580228556596" />
-    <state x="3474" y="585" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1580200773825" />
+    <state x="2853" y="583" width="858" height="535" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/2560.233.1920.1030/0.0.2048.1112@2560.233.1920.1030" timestamp="1581408098850" />
     <state x="718" y="288" width="611" height="536" key="find.popup" timestamp="1581268254415">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
@@ -296,6 +359,16 @@
           <url>file://C:/Anaconda3/envs/violence/Lib/site-packages/torchvision/datasets/video_utils.py</url>
           <line>203</line>
           <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/i3d/test_i3d.py</url>
+          <line>13</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Models.py</url>
+          <line>84</line>
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

@@ -25,7 +25,7 @@ parser.add_argument('--print_train_stats_every_n_iters', default=200, type=int, 
 # ============================ Learning Configs ============================
 parser.add_argument('--batch_size', default=4, type=int)
 parser.add_argument('--lr', default=0.0003, type=float)
-parser.add_argument('--epoch', default=5, type=int)
+parser.add_argument('--epoch', default=10, type=int)
 parser.add_argument('--drop_out', default=0.5, type=float)
 
 # ============================ Model Configs ============================
