@@ -8,7 +8,7 @@ https://github.com/keunhong/pytorch-soundnet
 2. Download i3d from https://github.com/piergiaj/pytorch-i3d and rename to i3d.
 3. Download ucf101 videos and train/test splits from https://www.crcv.ucf.edu/data/UCF101.php
 5. Resize, crop and remove videos without sound:
-python data_processing.py --input_dir {ucf location dir} --output_dir {scales and crop version of ucf}
+python data_processing.py --input_dir {ucf location dir} --output_dir UCF-101-rescaled-cropped
 6. Edit root_dir in opts.py:
 https://github.com/Alexyuda/action_recognition/blob/fae5b5b6d826674d2d7f531a602b9c801ac63237/opts.py#L6
 7. Download pretrained networks from:
