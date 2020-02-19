@@ -3,6 +3,10 @@ This project is based on the the following repos:
 https://github.com/piergiaj/pytorch-i3d
 https://github.com/keunhong/pytorch-soundnet
 
+In this project three action classification nets are trained on UCF-101: I3D , I3D features
+concatenated to soundnet features and a novel network that fuses I3D and Soundnet features
+using attention.
+
 ### Installation 
 1. Download soundnet from https://github.com/keunhong/pytorch-soundnet and rename to soundnet.
 2. Download i3d from https://github.com/piergiaj/pytorch-i3d and rename to i3d.
