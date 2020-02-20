@@ -1,5 +1,5 @@
 ## Action recognition using audio and video on ucf101
-This project is based on the the following repos:
+This project is using the the following repos:
 https://github.com/piergiaj/pytorch-i3d
 https://github.com/keunhong/pytorch-soundnet
 
