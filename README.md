@@ -8,7 +8,7 @@ concatenated to soundnet features and a novel network that fuses I3D and Soundne
 using attention.
 
 ### Project tree
-'''bash
+```bash
 │   .gitignore
 │   cmd_test.cmd
 │   cmd_train.cmd
@@ -26,7 +26,7 @@ using attention.
 │   └──ucfTrainTestlist	
 ├───i3d
 ├───soundnet
-'''
+```
 ### Installation 
 1. Download soundnet from https://github.com/keunhong/pytorch-soundnet and rename to soundnet.
 2. Download i3d from https://github.com/piergiaj/pytorch-i3d and rename to i3d.
