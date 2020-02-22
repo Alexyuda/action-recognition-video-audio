@@ -1,5 +1,5 @@
 ## Action recognition using audio and video on ucf101
-This project is based on the the following repos:
+This project is using the the following repos:
 https://github.com/piergiaj/pytorch-i3d
 https://github.com/keunhong/pytorch-soundnet
 
@@ -7,16 +7,36 @@ In this project three action classification nets are trained on UCF-101: I3D , I
 concatenated to soundnet features and a novel network that fuses I3D and Soundnet features
 using attention.
 
+### Project tree
+```bash
+│   .gitignore
+│   cmd_test.cmd
+│   cmd_train.cmd
+│   DateSet.py
+│   Main.py
+│   Models.py
+│   opts.py
+│   README.md
+│
+├───checkpnts
+├───logs
+├───data
+│   ├──UCF-101
+│	  ├──UCF-101 UCF-101-rescaled-cropped
+│   └──ucfTrainTestlist	
+├───i3d
+├───soundnet
+```
 ### Installation 
 1. Download soundnet from https://github.com/keunhong/pytorch-soundnet and rename to soundnet.
 2. Download i3d from https://github.com/piergiaj/pytorch-i3d and rename to i3d.
-3. Download ucf101 videos and train/test splits from https://www.crcv.ucf.edu/data/UCF101.php
+3. Download ucf101 videos and train/test splits from https://www.crcv.ucf.edu/data/UCF101.php to ./data/ucfTrainTestlist
 5. Resize, crop and remove videos without sound:
-python data_processing.py --input_dir {ucf location dir} --output_dir UCF-101-rescaled-cropped
+python data_processing.py --input_dir {ucf location dir} --output_dir ./data/UCF-101-rescaled-cropped
 6. Edit root_dir in opts.py:
 https://github.com/Alexyuda/action_recognition/blob/fae5b5b6d826674d2d7f531a602b9c801ac63237/opts.py#L6
-7. Download pretrained networks from:
-
+7. Download pretrained networks from: https://drive.google.com/open?id=1yV3krJrZu2UNAgjc1VJlIpajFX4PJTvm
+to ./checkpnts.
 
 ### Train
 python Main.py --model_type {choose i3d/i3d_soundnet_concat/i3d_soundnet_attention} --train_or_test_mode train
