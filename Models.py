@@ -63,7 +63,7 @@ class I3dRgbSoundAttentionUcf101(nn.Module):
         self.drop_out = nn.Dropout(p=drop_out)
         self.relu = nn.ReLU()
 
-    def forward(self, x_vid, x_audio=None, epoch=sys.maxsize):
+    def forward(self, x_vid, x_audio=None, do_warm_up=False):
         x_vid = self.i3d(x_vid)
         avg_pool_vid = nn.AvgPool1d(kernel_size=x_vid.shape[2])
         x_vid = avg_pool_vid(x_vid).squeeze()
@@ -82,7 +82,7 @@ class I3dRgbSoundAttentionUcf101(nn.Module):
         vid_attention = x_attention[:, 0].unsqueeze(1).expand(-1, 256)
         audio_attention = x_attention[:, 1].unsqueeze(1).expand(-1, 256)
 
-        if epoch <= 1:  # warm up - give audio net more influence
+        if do_warm_up:  # warm up - give audio net more influence
             x = x_vid * 0 + x_audio * 1
         else:
             x = x_vid * vid_attention + x_audio * audio_attention
