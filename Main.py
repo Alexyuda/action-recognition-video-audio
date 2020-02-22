@@ -30,18 +30,9 @@ def main():
     model_i3d.load_state_dict(torch.load(os.path.join(args.root_dir, args.I3d_pretrained_fn)))
     model_i3d.to(device)
 
-    for name, param in model_i3d.named_parameters():
-        if not ('logits' in name or 'Mixed_5c' in name):
-            param.requires_grad = False
-
     model_soundnet = SoundNet()
     model_soundnet.load_state_dict(torch.load(os.path.join(args.root_dir, args.soundnet_pretrained_fn)))
     model_soundnet.to(device)
-
-    for name, param in model_soundnet.named_parameters():
-        if not ('7' in name or '8' in name):
-            param.requires_grad = False
-
 
     # load data
     trainset = load_ucf101_data_set(args=args, train=True)
@@ -56,6 +47,14 @@ def main():
     if args.model_type == 'i3d_soundnet_attention':
         model = I3dRgbSoundAttentionUcf101(model_i3d, model_soundnet, drop_out=args.drop_out)
         load_audio = True
+
+    for name, param in model.soundnet.named_parameters():
+        if not ('7' in name or '8' in name):
+            param.requires_grad = False
+
+    for name, param in model.i3d.named_parameters():
+        if not ('logits' in name or 'Mixed_5c' in name):
+            param.requires_grad = False
 
     model.to(device)
 
@@ -93,14 +92,14 @@ def main():
                 if args.model_type == 'i3d_soundnet_attention':
                     result, _, vid_emb, audio_emb = model(video, audio, e)
                     loss = criterion(result, labels)
-                    if e <= 1:
+                    if e <= 1 and not args.use_pre_trained_model:
                         kl_dist = nn.functional.kl_div(nn.functional.log_softmax(vid_emb, dim=1),
                                                        nn.functional.softmax(audio_emb, dim=1), reduction='batchmean')
                         loss += kl_dist
                 else:
                     result = model(video, audio)
+                    loss = criterion(result, labels)
 
-                loss = criterion(result, labels)
                 train_loss += loss.item()
                 prec1, prec5 = compute_accuracy(result, labels, topk=(1, 5))
                 train_accuracy_1 += prec1
