@@ -90,13 +90,16 @@ def main():
                     audio = audio.to(device)
 
                 if args.model_type == 'i3d_soundnet_attention':
-                    do_warm_up = (e <= 1) and (not args.use_pre_trained_model)
-                    result, _, vid_emb, audio_emb = model(video, audio, do_warm_up=do_warm_up)
+                    do_warm_up1 = (e <= 1) and (not args.use_pre_trained_model)
+                    do_warm_up2 = (e <= 2) and (e > 1) and (not args.use_pre_trained_model)
+                    result, sound_attention, vid_emb, audio_emb = model(video, audio, do_warm_up=do_warm_up1)
                     loss = criterion(result, labels)
-                    if do_warm_up:
+                    if do_warm_up1:
                         kl_dist = nn.functional.kl_div(nn.functional.log_softmax(vid_emb, dim=1),
                                                        nn.functional.softmax(audio_emb, dim=1), reduction='batchmean')
                         loss += kl_dist
+                    if do_warm_up2:
+                        loss += 0.1 * torch.mean(torch.abs(sound_attention-0.5))
                 else:
                     result = model(video, audio)
                     loss = criterion(result, labels)
